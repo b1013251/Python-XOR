@@ -112,14 +112,14 @@ class NN :
 	# デバッグ用
 	def debug(self) :
 		print "Neurons"
-		print "number | value |  TYPE"
+		print "number    |value     |TYPE"
 		for n in self.neurons :
-			print n.num, n.value , n.neuron_type
+			print "%d %10.6f %d" % (n.num, n.value , n.neuron_type)
 
 		print "Pathes"
-		print "W  |back  |forward | delta"
+		print "W         |back|forward|delta"
 		for p in self.pathes :
-			print p.weight, p.back, p.forward, p.delta
+			print "%10.6f %2d %2d %10.6f" % ( p.weight, p.back, p.forward, p.delta )
 
 	# 2つの出力をタプルで返す
 	def output(self,data) :
@@ -202,4 +202,4 @@ if __name__ == "__main__":
 
 	nn.out_test()
 
-	#nn.debug()
+	nn.debug()
