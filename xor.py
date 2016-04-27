@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import numpy as np
 import math
 import random
 
@@ -71,7 +70,7 @@ class Neuron :
 		result = 0
 		back_pathes = self.search_back(self.num, nn.pathes)
 		for p in back_pathes :
-			#print "result +", p.weight , "*", nn.neurons[p.forward].value, "(", nn.neurons[p.forward].num ,")"
+			#（デバッグ用）print "result +", p.weight , "*", nn.neurons[p.forward].value, "(", nn.neurons[p.forward].num ,")"
 			if p.back == (-1) :
 				result += p.weight
 			else :
@@ -109,19 +108,7 @@ class NN :
 		for i in range(hidden_num + output_num) :
 			self.pathes.append(Path(Calc.rand(), -1, hidden_num + i - 1 ))
 
-	# デバッグ用
-	def debug(self) :
-		print "Neurons"
-		print "number    |value     |TYPE"
-		for n in self.neurons :
-			print "%d %10.6f %d" % (n.num, n.value , n.neuron_type)
-
-		print "Pathes"
-		print "W         |back|forward|delta"
-		for p in self.pathes :
-			print "%10.6f %2d %2d %10.6f" % ( p.weight, p.back, p.forward, p.delta )
-
-	# 2つの出力をタプルで返す
+	# 出力をタプルで返す
 	def output(self,data) :
 		self.neurons[0].value = data[0]
 		self.neurons[1].value = data[1]
@@ -132,12 +119,11 @@ class NN :
 
 		return y
 
-
 	# デルタ
 	def output_delta(self, b_pathes, train, value, raw_value) :
 		for bp in b_pathes :
 			bp.delta = (train[2] - value) * Calc.sigmoid_dash(raw_value)
-			#print "op! bp.delta", bp.delta
+			#（デバッグ用）print "op! bp.delta", bp.delta
 
 	def hidden_delta(self, f_pathes, b_pathes, value, raw_value) :
 		for bp in b_pathes :
@@ -146,7 +132,7 @@ class NN :
 				#print fp.delta, fp.weight
 				sum += fp.delta * fp.weight
 			bp.delta = sum * Calc.sigmoid_dash(raw_value)
-			#print "sum", sum , "bp.delta", bp.delta
+			#（デバッグ用）print "sum", sum , "bp.delta", bp.delta
 
 	# 誤差逆伝搬を行う
 	def bp_step(self,train) :
@@ -177,7 +163,6 @@ class NN :
 			p.deltaW = p.delta * eta * back_n.value + alpha * p.deltaW
 			p.weight = p.weight + p.deltaW
 
-
 	# 出力テスト
 	def out_test (self) :
 		print "results"
@@ -191,15 +176,23 @@ class NN :
 		y = nn.output((1,1))
 		print y
 
+	# 重み出力(デバッグ用)
+	def debug(self) :
+		print "Neurons"
+		print "number    |value     |TYPE"
+		for n in self.neurons :
+			print "%d %10.6f %d" % (n.num, n.value , n.neuron_type)
+
+		print "Pathes"
+		print "W         |back|forward|delta"
+		for p in self.pathes :
+			print "%10.6f %2d %2d %10.6f" % ( p.weight, p.back, p.forward, p.delta )
+
+
 if __name__ == "__main__":
 	print "XOR by NN"
 
 	nn = NN(2,3,1)
-	y = nn.output((0,1))
-	print y
-
 	nn.backpropergation(10000)
-
-	nn.out_test()
 
 	nn.debug()
