@@ -4,7 +4,7 @@ import math
 import random
 
 # パラメータ
-eta  = 1.0
+eta  = 0.5 
 alpha = 0.1
 
 # 教師データ
